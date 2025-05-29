@@ -12,7 +12,7 @@ function App() {
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/products')
+    axios.get('http://10.11.8.205:5000/products')
       .then(res => setProducts(res.data));
   }, []);
 
@@ -43,7 +43,7 @@ function App() {
           <Table sx={{ minWidth: 650 }} aria-label="product table">
             <TableHead sx={{ backgroundColor: theme.palette.grey[100] }}>
               <TableRow>
-                <TableCell sx={{ fontWeight: 600, fontSize: '1.1rem' }}>Product Name</TableCell>
+                <TableCell sx={{ fontWeight: 600, fontSize: '1.1rem' }}>Name</TableCell>
                 <TableCell 
                   align="right" 
                   sx={{ fontWeight: 600, fontSize: '1.1rem' }}
@@ -60,7 +60,7 @@ function App() {
                   align="center" 
                   sx={{ fontWeight: 600, fontSize: '1.1rem' }}
                 >
-                  Stock Status
+                   In Stock
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -99,7 +99,7 @@ function App() {
                           fontWeight: 500
                         }}
                       >
-                        {product.inStock ? 'In Stock' : 'Out of Stock'}
+                        {product.inStock ? 'Yes' : 'No'}
                       </Box>
                     </TableCell>
                   </TableRow>
@@ -115,7 +115,7 @@ function App() {
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}
-          rowsPerPageOptions={[10, 20, 50, 100]}
+          rowsPerPageOptions={[10, 25, 50, 100]}
           sx={{
             borderTop: `1px solid ${theme.palette.divider}`,
             '& .MuiTablePagination-selectLabel': { fontWeight: 500 },
