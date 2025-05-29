@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { 
   Table, TableBody, TableCell, TableContainer, TableHead, TableRow, 
-  Paper, TablePagination, Typography, Box, useTheme 
+  Paper, TablePagination, Typography, Box, useTheme, TextField 
 } from '@mui/material';
 
 function App() {
   const theme = useTheme();
   const [products, setProducts] = useState([]);
+  const [searchInput, setSearchInput] = useState('');
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
@@ -16,9 +17,20 @@ function App() {
       .then(res => setProducts(res.data));
   }, []);
 
+  // Filter products by name based on search input (case-insensitive)
+  const filteredProducts = products.filter(product =>
+    product.name.toLowerCase().includes(searchInput.toLowerCase())
+  );
+
   const handleChangePage = (event, newPage) => setPage(newPage);
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  // Reset to first page whenever search input changes
+  const handleSearchInput = (e) => {
+    setSearchInput(e.target.value);
     setPage(0);
   };
 
@@ -37,7 +49,17 @@ function App() {
       >
         Product Catalog
       </Typography>
-      
+
+      {/* Search Bar */}
+      <TextField
+        label="Search Products by Name"
+        variant="outlined"
+        fullWidth
+        value={searchInput}
+        onChange={handleSearchInput}
+        sx={{ mb: 2 }}
+      />
+
       <Paper elevation={3} sx={{ borderRadius: 4 }}>
         <TableContainer>
           <Table sx={{ minWidth: 650 }} aria-label="product table">
@@ -66,7 +88,7 @@ function App() {
             </TableHead>
             
             <TableBody>
-              {products
+              {filteredProducts
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((product, idx) => (
                   <TableRow 
@@ -110,7 +132,7 @@ function App() {
         
         <TablePagination
           component="div"
-          count={products.length}
+          count={filteredProducts.length}
           page={page}
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
